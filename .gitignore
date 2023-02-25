@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+music_data/
+samples/
+audioTrain/
+.DS_Store
