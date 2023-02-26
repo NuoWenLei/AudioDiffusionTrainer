@@ -32,19 +32,20 @@ def create_model():
 	)
 
 
-def main():
-	args = {
-		# DataLoader args
-		"csvPath": "TODO",
-		"audioDirPath": "TODO",
-		"audioColumn": "TODO",
-		"targetColumn": "TODO",
-		"samplingRate": SAMPLE_RATE,
-		"numSamples": NUM_SAMPLES,
-		"batchSize": BATCH_SIZE,
-		"returnDataset": False,
-		"shuffle": True,
-	}
+def main(args = None):
+	if args is not None:
+		args = {
+			# DataLoader args
+			"csvPath": "TODO",
+			"audioDirPath": "TODO",
+			"audioColumn": "TODO",
+			"targetColumn": "TODO",
+			"samplingRate": SAMPLE_RATE,
+			"numSamples": NUM_SAMPLES,
+			"batchSize": BATCH_SIZE,
+			"returnDataset": False,
+			"shuffle": True,
+		}
 
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	print(f"Using device: {device}")
