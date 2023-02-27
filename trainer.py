@@ -51,7 +51,7 @@ def main(args = None):
 	print(f"Using device: {device}")
 
 	dataset = load_data()
-	data_dir = "/Users/nuowenlei/Documents/GitHub/AudioDiffusionTrainer/music_data" # Where to save the data
+	data_dir = "/Users/nuowenlei/Documents/GitHub/AudioDiffusionTrainer/music_data" # Where the music clip directory is
 	# Create where data is stored
 	dir = Path(data_dir)
 	dir.mkdir(exist_ok=True, parents=True)
