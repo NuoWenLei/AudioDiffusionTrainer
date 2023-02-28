@@ -77,5 +77,5 @@ class DataLoader():
 			return ds
 		else:
 			ds = ds.with_format("np")
-			return (np.asarray(ds[self.newAudioColumn]), np.asarray(ds[self.targetColumn]))
+			return (np.asarray(ds[self.newAudioColumn])[:, np.newaxis, ...], np.asarray(ds[self.targetColumn]))
 		

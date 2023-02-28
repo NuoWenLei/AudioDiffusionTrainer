@@ -4,12 +4,8 @@ import torch
 import torchaudio
 import gc
 import argparse
-import os
 from tqdm import tqdm
-import wandb
 from audio_diffusion_pytorch import DiffusionModel, UNetV0, VDiffusion, VSampler
-from dataset import load_data
-from pathlib import Path
 from data_loader import DataLoader
 
 SAMPLE_RATE = 30000
@@ -45,20 +41,14 @@ def main(args = None):
 			"batchSize": BATCH_SIZE,
 			"returnDataset": False,
 			"shuffle": True,
+
+			# Output args
+			"resDirPath": "TODO",
+			
 		}
 
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	print(f"Using device: {device}")
-
-	dataset = load_data()
-	data_dir = "/Users/nuowenlei/Documents/GitHub/AudioDiffusionTrainer/music_data" # Where the music clip directory is
-	# Create where data is stored
-	dir = Path(data_dir)
-	dir.mkdir(exist_ok=True, parents=True)
-
-	print(f"Dataset length: {len(dataset)}")
-
-	torchaudio.save("test.wav", dataset[0], SAMPLE_RATE)
 
 	dataloader = DataLoader(
 		csvPath=args["csvPath"],
@@ -83,7 +73,7 @@ def main(args = None):
 	
 	scaler = torch.cuda.amp.GradScaler()
 
-	checkpoint_path = "checkpoint-audio-diffusion.pt"
+	checkpoint_path = args["resDirPath"] + "checkpoint-audio-diffusion.pt"
 
 	model.train()
 	while epoch < 100:
@@ -115,7 +105,7 @@ def main(args = None):
 					with torch.cuda.amp.autocast():
 						sample = model.sample(noise, num_steps=100)
 
-					torchaudio.save(f'test_generated_sound_{step}.wav', sample[0].cpu(), SAMPLE_RATE)
+					torchaudio.save(args["resDirPath"] + f'test_generated_sound_{step}.wav', sample[0].cpu(), SAMPLE_RATE)
 					del sample
 					gc.collect()
 					torch.cuda.empty_cache()
@@ -133,7 +123,6 @@ def main(args = None):
 			'model_state_dict': model.state_dict(),
 			'optimizer_state_dict': optimizer.state_dict(),
 		}, checkpoint_path)
-		wandb.save(checkpoint_path)
 
 
 def parse_args():
