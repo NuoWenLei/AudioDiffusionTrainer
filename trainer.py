@@ -13,23 +13,42 @@ BATCH_SIZE = 12
 NUM_SAMPLES = 2**18
 
 
-def create_model():
-	return DiffusionModel(
-		net_t=UNetV0, # The model type used for diffusion (U-Net V0 in this case)
-		in_channels=1, # U-Net: number of input/output (audio) channels
-		channels=[8, 32, 64, 128, 256, 512, 512, 1024, 1024], # U-Net: channels at each layer
-		factors=[1, 4, 4, 4, 2, 2, 2, 2, 2], # U-Net: downsampling and upsampling factors at each layer
-		items=[1, 2, 2, 2, 2, 2, 2, 4, 4], # U-Net: number of repeating items at each layer
-		attentions=[0, 0, 0, 0, 0, 1, 1, 1, 1], # U-Net: attention enabled/disabled at each layer
-		attention_heads=8, # U-Net: number of attention heads per attention item
-		attention_features=64, # U-Net: number of attention features per attention item
-		diffusion_t=VDiffusion, # The diffusion method used
-		sampler_t=VSampler, # The diffusion sampler used
-	)
+def create_model(text_condition = False):
+	if text_condition:
+		return DiffusionModel(
+			net_t=UNetV0, # The model type used for diffusion (U-Net V0 in this case)
+			in_channels=1, # U-Net: number of input/output (audio) channels
+			channels=[8, 32, 64, 128, 256, 512, 512, 1024, 1024], # U-Net: channels at each layer
+			factors=[1, 4, 4, 4, 2, 2, 2, 2, 2], # U-Net: downsampling and upsampling factors at each layer
+			items=[1, 2, 2, 2, 2, 2, 2, 4, 4], # U-Net: number of repeating items at each layer
+			attentions=[0, 0, 0, 0, 0, 1, 1, 1, 1], # U-Net: attention enabled/disabled at each layer
+			attention_heads=8, # U-Net: number of attention heads per attention item
+			attention_features=64, # U-Net: number of attention features per attention item
+			diffusion_t=VDiffusion, # The diffusion method used
+			sampler_t=VSampler, # The diffusion sampler used
+			use_text_conditioning=True, # U-Net: enables text conditioning (default T5-base)
+			use_embedding_cfg=True, # U-Net: enables classifier free guidance
+			embedding_max_length=64, # U-Net: text embedding maximum length (default for T5-base)
+			embedding_features=768, # U-Net: text mbedding features (default for T5-base)
+			cross_attentions=[0, 0, 0, 1, 1, 1, 1, 1, 1], # U-Net: cross-attention enabled/disabled at each layer
+		)
+	else:
+		return DiffusionModel(
+			net_t=UNetV0, # The model type used for diffusion (U-Net V0 in this case)
+			in_channels=1, # U-Net: number of input/output (audio) channels
+			channels=[8, 32, 64, 128, 256, 512, 512, 1024, 1024], # U-Net: channels at each layer
+			factors=[1, 4, 4, 4, 2, 2, 2, 2, 2], # U-Net: downsampling and upsampling factors at each layer
+			items=[1, 2, 2, 2, 2, 2, 2, 4, 4], # U-Net: number of repeating items at each layer
+			attentions=[0, 0, 0, 0, 0, 1, 1, 1, 1], # U-Net: attention enabled/disabled at each layer
+			attention_heads=8, # U-Net: number of attention heads per attention item
+			attention_features=64, # U-Net: number of attention features per attention item
+			diffusion_t=VDiffusion, # The diffusion method used
+			sampler_t=VSampler, # The diffusion sampler used
+		)
 
 
 def main(args = None):
-	if args is not None:
+	if args is None:
 		args = {
 			# DataLoader args
 			"csvPath": "TODO",
@@ -46,6 +65,8 @@ def main(args = None):
 			"resDirPath": "TODO",
 			
 		}
+	if "resDirPath" not in args.keys():
+		args["resDirPath"] = "./"
 
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	print(f"Using device: {device}")
@@ -62,7 +83,7 @@ def main(args = None):
 		shuffle=args["shuffle"]
 	)
 
-	model = create_model().to(device)
+	model = create_model(text_condition=False).to(device)
 
 	optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
@@ -81,14 +102,12 @@ def main(args = None):
 		avg_loss_step = 0
 		progress = tqdm(range(dataloader.numBatch))
 		for i in progress:
-			audio, caption = dataloader.nextBatch()
+			audio, _ = dataloader.nextBatch()
 			with torch.autograd.set_detect_anomaly(True):
 				optimizer.zero_grad()
-				audio = audio.to(device)
+				audio = torch.from_numpy(audio).to(device)
 				with torch.cuda.amp.autocast():
-					loss = model(audio,
-		  				text = caption.tolist()
-		  			)
+					loss = model(audio)
 					avg_loss += loss.item()
 					avg_loss_step += 1
 				scaler.scale(loss).backward()
