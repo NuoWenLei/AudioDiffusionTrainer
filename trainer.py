@@ -1,4 +1,4 @@
-# Example from https://github.com/jameshball/audio-diffusion/blob/master/train.py
+# Adapted from https://github.com/archinetai/audio-diffusion-pytorch/issues/51#issuecomment-1451458653
 
 import torch
 import torchaudio
