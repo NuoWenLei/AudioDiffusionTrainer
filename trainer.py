@@ -118,11 +118,14 @@ def main(args = None):
 					epoch=epoch + i / dataloader.numBatch,
 				)
 
-				if step % 200 == 0:
+				if (step % 1000 == 0) and (step != 0):
+					cap = caption.tolist()[-1]
+					print()
+					print(cap)
 					# Turn noise into new audio sample with diffusion
 					noise = torch.randn(1, 1, NUM_SAMPLES, device=device)
 					with torch.cuda.amp.autocast():
-						sample = model.sample(noise, num_steps=100)
+						sample = model.sample(noise, text=[cap], num_steps=100)
 
 					torchaudio.save(args["resDirPath"] + f'test_generated_sound_{step}.wav', sample[0].cpu(), SAMPLE_RATE)
 					del sample
@@ -134,6 +137,10 @@ def main(args = None):
 					avg_loss = 0
 					avg_loss_step = 0
 				
+				del audio
+				del caption
+				gc.collect()
+
 				step += 1
 
 		epoch += 1
