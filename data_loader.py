@@ -3,7 +3,7 @@ import numpy as np
 import datasets
 from datasets import Dataset, Audio
 
-class DataLoader():
+class CustomDataLoader():
 	def __init__(self,
 	      
 	      # paths to files
@@ -54,6 +54,19 @@ class DataLoader():
 			self.sampleCsv = self.sampleCsv.sample(frac = 1).reset_index()
 		self.sampleCsv["bucket"] = (self.sampleCsv.index.values // self.batchSize)
 		self.numBatch = self.sampleCsv["bucket"].max()
+
+	# Preprocess and get entire dataset
+	def fullBatch(self):
+		def cropAudioAndCreateNewColumn(row):
+			row[self.newAudioColumn] = row[self.audioColumn]["array"][:self.numSamples]
+			return row
+
+		ds = Dataset.from_pandas(self.sampleCsv)\
+			.cast_column(self.audioColumn, Audio(sampling_rate=self.samplingRate))
+		
+		ds = ds.map(cropAudioAndCreateNewColumn)
+
+		return ds.with_format("torch")
 	
 	# Preprocesses next batch of data into numpy array of audio and numpy array of caption
 	def nextBatch(self):
