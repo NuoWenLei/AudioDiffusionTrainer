@@ -8,8 +8,11 @@
 
 # Default resources are 1 core with 2.8GB of memory.
 
-# Use more memory (4GB) (CPU RAM):
+# Use more memory (20GB) (CPU RAM):
 #SBATCH --mem=20G
+
+# Use more cores with CUDA
+#SBATCH -n 4
 
 # Specify a job name:
 #SBATCH -J audioDiffusionTraining
