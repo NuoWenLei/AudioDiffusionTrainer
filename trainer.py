@@ -53,7 +53,6 @@ def main(args = None):
 			# DataLoader args
 			"csvPath": "TODO",
 			"audioDirPath": "TODO",
-			"audioColumn": "TODO",
 			"targetColumn": "TODO",
 			"samplingRate": SAMPLE_RATE,
 			"numSamples": NUM_SAMPLES,
@@ -74,7 +73,6 @@ def main(args = None):
 	dataloader = CustomDataLoader(
 		csvPath=args["csvPath"],
 		audioDirPath=args["audioDirPath"],
-		audioColumn=args["audioColumn"],
 		targetColumn=args["targetColumn"],
 		samplingRate=args["samplingRate"],
 		numSamples=args["numSamples"],

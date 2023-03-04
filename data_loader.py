@@ -11,7 +11,7 @@ class CustomDataLoader():
 		  audioDirPath: str,
 
 		  # column of filepaths
-		  audioColumn: str,
+		  audioColumn: str = None,
 
 		  # adjustable params
 		  newAudioColumn: str = "audioArray",
@@ -36,6 +36,8 @@ class CustomDataLoader():
 		self.audioColumn = audioColumn
 		self.newAudioColumn = newAudioColumn
 		self.audioDirPath = audioDirPath
+		if (audioColumn is None):
+			self.createAudioPath()
 		if (bucketColumn is None):
 			self.bucketColumn = "bucket"
 			self.bucketize(shuffle = shuffle)
@@ -47,6 +49,11 @@ class CustomDataLoader():
 				raise Exception(f"Bucket column {bucketColumn} does not exist or Number of batches (numBatch) not declared!!!")
 		if (not self.returnDataset) and (self.targetColumn is None):
 			raise Exception("Must have target column if not returning entire dataset")
+		
+	# Create audio path column
+	def createAudioPath(self):
+		self.sampleCsv["audioPath"] = [self.audioDirPath + f"{ytid}.mp3" for ytid in self.sampleCsv["ytid"]]
+		self.audioColumn = "audioPath"
 
 	# Simple function for dividing samples into batches
 	def bucketize(self, shuffle: bool = True):
