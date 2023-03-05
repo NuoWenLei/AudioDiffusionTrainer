@@ -90,7 +90,7 @@ def main(argPath = "./ccv_args.json"):
 	checkpoint_path = args["resDirPath"] + "checkpoint-audio-diffusion.pt"
 
 	if os.path.exists(checkpoint_path):
-		checkpoint = torch.load(checkpoint_path, map_location="cpu")
+		checkpoint = torch.load(checkpoint_path)
 		model.load_state_dict(checkpoint['model_state_dict'])
 		model = model.cuda()
 		optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
