@@ -34,4 +34,4 @@ module load cuda/8.0.61 cudnn/5.1
 source audioTrain/bin/activate
 
 # Run a script
-python ccv_trainer.py
+python3 ccv_trainer.py
