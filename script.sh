@@ -27,10 +27,9 @@
 #SBATCH --mail-type=fail         # send email if job fails
 #SBATCH --mail-user=nuo_wen_lei@brown.edu
 
-
 # Set up the environment by loading modules
 module load python/3.9.0
-module load cuda/10.2 cudnn/5.1
+module load cuda/11.1.1 cudnn/8.1.0
 source audioTrainer/bin/activate
 
 # Run a script
