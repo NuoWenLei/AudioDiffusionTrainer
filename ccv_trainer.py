@@ -96,6 +96,7 @@ def main(argPath = "./ccv_args.json"):
 		epoch = checkpoint['epoch']
 		step = epoch * dataloader.numBatch
 		send_email(logger(f"Found checkpoint at {checkpoint_path}: Resuming training at Epoch {epoch}"))
+		torch.cuda.empty_cache()
 
 	model.train()
 	while epoch < 100:
