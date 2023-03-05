@@ -76,7 +76,7 @@ def main(argPath = "./ccv_args.json"):
 		shuffle=args["shuffle"]
 	)
 
-	model = create_model(text_condition=True).to(device)
+	model = create_model(text_condition=True)
 
 	optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
@@ -87,17 +87,20 @@ def main(argPath = "./ccv_args.json"):
 	
 	scaler = torch.cuda.amp.GradScaler()
 
+	torch.cuda.empty_cache()
+
 	checkpoint_path = args["resDirPath"] + "checkpoint-audio-diffusion.pt"
 
 	if os.path.exists(checkpoint_path):
 		checkpoint = torch.load(checkpoint_path)
 		model.load_state_dict(checkpoint['model_state_dict'])
-		model = model.cuda()
 		optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 		epoch = checkpoint['epoch']
 		step = epoch * dataloader.numBatch
 		send_email(logger(f"Found checkpoint at {checkpoint_path}: Resuming training at Epoch {epoch}"))
 		torch.cuda.empty_cache()
+
+	model.to(device)
 		
 	model.train()
 	send_email(logger(f"""

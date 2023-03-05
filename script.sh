@@ -12,7 +12,7 @@
 #SBATCH --mem-per-cpu=20GB
 
 # Use more cores with CUDA
-#SBATCH -n 4
+#SBATCH -n 1
 
 # Specify a job name:
 #SBATCH -J audioDiffusionTraining
