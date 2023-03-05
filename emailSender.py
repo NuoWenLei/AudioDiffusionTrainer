@@ -37,21 +37,22 @@ def send_attached_email(mail_subject, attach_file_path):
 	session.quit()
 
 def send_email(body):
-	# Set Global Variables
-	gmail_user = 'l39X35f828DPWf9j@gmail.com'
-	gmail_password = 'hizdnjdiyjabizja'
-	to = "nuo_wen_lei@brown.edu"
-	# Create Email 
-	mail_from = f"stock_data_email <{gmail_user}>"
-	mail_to = f"Nuo Wen Lei <{to}>"
-	mail_subject = "CCV Run Status"
-	mail_message_body = body
-
-	mail_message = '''\
-	From: %s\r\nTo: %s\r\nSubject: %s\r\nContent-Type: text/html\n%s
-	''' % (mail_from, mail_to, mail_subject, mail_message_body)
-	# Sent Email
-	server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-	server.login(gmail_user, gmail_password)
-	server.sendmail(gmail_user, to, mail_message)
-	server.close()
+	mail_content = f"""
+	{body}
+	"""
+	#The mail addresses and password
+	sender_address = 'l39X35f828DPWf9j@gmail.com'
+	sender_pass = 'hizdnjdiyjabizja'
+	receiver_address = "nuo_wen_lei@brown.edu"
+	#Setup the MIME
+	message = MIMEText(mail_content, "plain")
+	message['From'] = sender_address
+	message['To'] = receiver_address
+	message['Subject'] = "CCV Run Status"
+	#Create SMTP session for sending the mail
+	session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
+	session.starttls() #enable security
+	session.login(sender_address, sender_pass) #login with mail_id and password
+	text = message.as_string()
+	session.sendmail(sender_address, receiver_address, text)
+	session.quit()
