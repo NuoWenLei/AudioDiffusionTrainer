@@ -76,7 +76,7 @@ def main(argPath = "./ccv_args.json"):
 		shuffle=args["shuffle"]
 	)
 
-	model = create_model(text_condition=True)
+	model = create_model(text_condition=True).to(device)
 
 	optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
@@ -99,8 +99,6 @@ def main(argPath = "./ccv_args.json"):
 		step = epoch * dataloader.numBatch
 		send_email(logger(f"Found checkpoint at {checkpoint_path}: Resuming training at Epoch {epoch}"))
 		torch.cuda.empty_cache()
-
-	model.to(device)
 		
 	model.train()
 	send_email(logger(f"""
