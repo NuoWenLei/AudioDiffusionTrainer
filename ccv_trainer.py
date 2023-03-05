@@ -3,10 +3,9 @@
 import torch
 import torchaudio
 import gc
-import argparse
+import os
 import json
 import datetime
-import smtplib
 from tqdm import tqdm
 from audio_diffusion_pytorch import DiffusionModel, UNetV0, VDiffusion, VSampler
 from data_loader import CustomDataLoader
@@ -89,6 +88,14 @@ def main(argPath = "./ccv_args.json"):
 	scaler = torch.cuda.amp.GradScaler()
 
 	checkpoint_path = args["resDirPath"] + "checkpoint-audio-diffusion.pt"
+
+	if os.path.exists(checkpoint_path):
+		checkpoint = torch.load(checkpoint_path)
+		model.load_state_dict(checkpoint['model_state_dict'])
+		optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+		epoch = checkpoint['epoch']
+		step = epoch * dataloader.numBatch
+		send_email(logger(f"Found checkpoint at {checkpoint_path}: Resuming training at Epoch {epoch}"))
 
 	model.train()
 	while epoch < 100:
