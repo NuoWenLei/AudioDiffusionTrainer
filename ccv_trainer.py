@@ -163,11 +163,13 @@ def main(argPath = "./ccv_args.json"):
 				step += 1
 
 		epoch += 1
+		model.to("cpu")
 		torch.save({
 			'epoch': epoch,
 			'model_state_dict': model.state_dict(),
 			'optimizer_state_dict': optimizer.state_dict(),
 		}, checkpoint_path)
+		model.to(device=device)
 
 
 # def parse_args():
