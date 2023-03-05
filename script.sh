@@ -30,7 +30,7 @@
 
 # Set up the environment by loading modules
 module load python/3.9.0
-module load cuda/8.0.61 cudnn/5.1
+module load cuda/10.2 cudnn/5.1
 source audioTrainer/bin/activate
 
 # Run a script
