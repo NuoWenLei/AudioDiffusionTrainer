@@ -97,8 +97,13 @@ def main(argPath = "./ccv_args.json"):
 		step = epoch * dataloader.numBatch
 		send_email(logger(f"Found checkpoint at {checkpoint_path}: Resuming training at Epoch {epoch}"))
 		torch.cuda.empty_cache()
-
+		
 	model.train()
+	send_email(logger(f"""
+	GPU Memory reserved for PyTorch: {torch.cuda.memory_reserved(0)}
+
+	GPU Memory allocated for PyTorch: {torch.cuda.memory_allocated(0)}
+	"""))
 	while epoch < 100:
 		avg_loss = 0
 		avg_loss_step = 0
@@ -136,7 +141,14 @@ def main(argPath = "./ccv_args.json"):
 					send_attached_email(f'CCV Step {step} Sample', save_path)
 				
 				if step % 100 == 0:
-					msg = logger(f"Step {step}, Epoch {epoch + i / dataloader.numBatch}, loss {avg_loss / avg_loss_step}")
+					msg = logger(f"""
+					Step {step}
+
+					Epoch {epoch + i / dataloader.numBatch}
+
+					Loss {avg_loss / avg_loss_step}
+					
+					GPU Memory {torch.cuda.memory_allocated(0)}""")
 					avg_loss = 0
 					avg_loss_step = 0
 					if step % 500 == 0:
