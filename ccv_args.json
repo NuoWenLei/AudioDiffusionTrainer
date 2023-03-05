@@ -1,6 +1,6 @@
 {
 	"csvPath": "./samples.csv",
-	"audioDirPath": "~/data/nlei/music_data/",
+	"audioDirPath": "./music_data/music_data/",
 	"targetColumn": "caption",
 	"samplingRate": 30000,
 	"numSamples": 262144,
