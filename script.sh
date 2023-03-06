@@ -9,7 +9,7 @@
 # Default resources are 1 core with 2.8GB of memory.
 
 # Use more memory (20GB) (CPU RAM):
-#SBATCH --mem=20GB
+#SBATCH --mem=30GB
 
 # Use more cores with CUDA
 #SBATCH -n 4
