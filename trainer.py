@@ -116,7 +116,7 @@ def main(args = None):
 					epoch=epoch + i / dataloader.numBatch,
 				)
 
-				if (step % 1000 == 0) and (step != 0):
+				if (step % 2000 == 0) and (step != 0):
 					cap = caption.tolist()[-1]
 					print()
 					print(cap)

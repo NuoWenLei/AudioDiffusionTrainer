@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Request half an hour of runtime:
-#SBATCH --time=20:00:00
+#SBATCH --time=15:00:00
 
 # Ask for the GPU partition and 1 GPU
 #SBATCH -p gpu --gres=gpu:1 --gres-flags=enforce-binding

@@ -11,7 +11,7 @@ def send_attached_email(mail_subject, attach_file_path):
 	#The mail addresses and password
 	sender_address = 'l39X35f828DPWf9j@gmail.com'
 	sender_pass = 'hizdnjdiyjabizja'
-	receiver_address = "nuo_wen_lei@brown.edu"
+	receiver_address = "nuo_wen_lei@brown.edu, eric_j_han@brown.edu"
 	#Setup the MIME
 	message = MIMEMultipart()
 	message['From'] = sender_address
