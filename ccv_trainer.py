@@ -127,7 +127,7 @@ def main(argPath = "./ccv_args.json"):
 					epoch=epoch + i / dataloader.numBatch,
 				)
 
-				if ((step % 2000) == 0) and (step != 0):
+				if ((step % 2500) == 0) and (step != 0):
 
 					cap = caption.tolist()[-1]
 					send_email(logger(f"Step {step} Sample caption: {cap}"))
@@ -141,7 +141,7 @@ def main(argPath = "./ccv_args.json"):
 					del sample
 					gc.collect()
 					torch.cuda.empty_cache()
-					send_attached_email(f'CCV Step {step} Sample', save_path)
+					send_attached_email(f'CCV Step {step} Sample', cap, save_path)
 				
 				if step % 100 == 0:
 					msg = logger(f"""
@@ -162,20 +162,6 @@ def main(argPath = "./ccv_args.json"):
 				gc.collect()
 
 				step += 1
-
-		cap = caption.tolist()[-1]
-		send_email(logger(f"Epoch {epoch} Sample caption: {cap}"))
-		# Turn noise into new audio sample with diffusion
-		noise = torch.randn(1, 1, NUM_SAMPLES, device=device)
-		with torch.cuda.amp.autocast():
-			sample = model.sample(noise, text=[cap], num_steps=100)
-
-		save_path = args["resDirPath"] + f'test_generated_sound_epoch_{epoch}.wav'
-		torchaudio.save(save_path, sample[0].cpu(), SAMPLE_RATE)
-		del sample
-		gc.collect()
-		torch.cuda.empty_cache()
-		send_attached_email(f'CCV Step {step} Sample', save_path)
 
 		epoch += 1
 		model.to("cpu")

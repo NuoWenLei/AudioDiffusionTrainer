@@ -4,9 +4,9 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-def send_attached_email(mail_subject, attach_file_path):
-	mail_content = """
-	No content, just audio
+def send_attached_email(mail_subject, body, attach_file_path):
+	mail_content = f"""
+	Caption: {body}
 	"""
 	#The mail addresses and password
 	sender_address = 'l39X35f828DPWf9j@gmail.com'
