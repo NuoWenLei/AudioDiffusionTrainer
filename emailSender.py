@@ -11,6 +11,7 @@ def send_attached_email(mail_subject, body, attach_file_path):
 	mail_content = f"""
 	Caption for audio is: \n\n {body}
 	"""
+	print(password["email"])
 	#The mail addresses and password
 	sender_address = 'l39X35f828DPWf9j@gmail.com'
 	sender_pass = password["email"]
@@ -45,7 +46,7 @@ def send_email(body):
 	"""
 	#The mail addresses and password
 	sender_address = 'l39X35f828DPWf9j@gmail.com'
-	sender_pass = 'hizdnjdiyjabizja'
+	sender_pass = password["email"]
 	receiver_address = "nuo_wen_lei@brown.edu"
 	#Setup the MIME
 	message = MIMEText(mail_content, "plain")
