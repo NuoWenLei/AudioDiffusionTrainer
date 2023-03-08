@@ -6,7 +6,7 @@ from email import encoders
 
 def send_attached_email(mail_subject, body, attach_file_path):
 	mail_content = f"""
-	Caption: {body}
+	Caption for audio is: \n\n {body}
 	"""
 	#The mail addresses and password
 	sender_address = 'l39X35f828DPWf9j@gmail.com'
