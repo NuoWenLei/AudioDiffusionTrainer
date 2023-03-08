@@ -1,8 +1,11 @@
-import smtplib
+import smtplib, json
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+
+with open("emailPassword.json", "r") as json_read:
+	password = json.load(json_read)
 
 def send_attached_email(mail_subject, body, attach_file_path):
 	mail_content = f"""
@@ -10,7 +13,7 @@ def send_attached_email(mail_subject, body, attach_file_path):
 	"""
 	#The mail addresses and password
 	sender_address = 'l39X35f828DPWf9j@gmail.com'
-	sender_pass = 'hizdnjdiyjabizja'
+	sender_pass = password["email"]
 	receiver_address = "nuo_wen_lei@brown.edu, eric_j_han@brown.edu"
 	#Setup the MIME
 	message = MIMEMultipart()

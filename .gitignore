@@ -131,3 +131,5 @@ music_data/
 samples/
 audioTrain/
 .DS_Store
+
+emailPassword.json
