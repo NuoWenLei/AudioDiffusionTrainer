@@ -133,3 +133,5 @@ audioTrain/
 .DS_Store
 
 emailPassword.json
+
+email_processing.ipynb
